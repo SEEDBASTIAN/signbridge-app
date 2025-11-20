@@ -7,3 +7,29 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# WASM files
+[[headers]]
+  for = "/wasm/*.wasm"
+  [headers.values]
+    Content-Type = "application/wasm"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/wasm/*.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Access-Control-Allow-Origin = "*"
+
+# All assets
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Access-Control-Allow-Origin = "*"
+
+# SPA routing
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
