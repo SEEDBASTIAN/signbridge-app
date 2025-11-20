@@ -24,7 +24,7 @@ export default function DetectScreen({ theme, textScale, ttsEnabled, confidenceT
     onFrameKeypoints: () => tickFps(),
   });
 
-  const { ready: modelReady, classify } = useTfjsClassifier();
+  const { ready: modelReady, classify, error: modelError } = useTfjsClassifier();
 
   useEffect(() => {
     let active = true;
@@ -116,6 +116,11 @@ export default function DetectScreen({ theme, textScale, ttsEnabled, confidenceT
         <Text style={[styles.meta, { color: theme.fg, fontSize: 11 * textScale }]}>
           FPS: {fps} | Frames: {sequence?.length || 0}/24 | Modelo: {modelReady ? '✓ OK' : 'Cargando…'}
         </Text>
+        {modelError && (
+          <Text style={[styles.errorText, { color: '#ef4444', fontSize: 12 * textScale }]}>
+            ⚠️ {modelError}
+          </Text>
+        )}
       </View>
 
       <View style={styles.actions}>
@@ -142,6 +147,7 @@ const styles = StyleSheet.create({
   confidenceBarFill: { height: '100%', borderRadius: 4, transition: 'width 100ms ease-out' },
   confText: { fontWeight: '600', opacity: 0.9 },
   meta: { opacity: 0.7, marginTop: 4 },
+  errorText: { fontWeight: '600', marginTop: 8, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, backgroundColor: 'rgba(239, 68, 68, 0.1)' },
   actions: { flexDirection: 'row', gap: 8, justifyContent: 'center' },
   btn: { paddingVertical: 12, paddingHorizontal: 24, borderRadius: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
   btnText: { fontWeight: '800', letterSpacing: 1 }
