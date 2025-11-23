@@ -9,11 +9,12 @@ import '../utils/tfjs-compat';
  * - Normalización: ya aplicada en el hook de MediaPipe
  * - Labels: se cargan desde /labels.json o prop.
  */
-export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/model/model.json' } = {}) {
+export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/model/model.json', useGraphModel = false } = {}) {
   const [ready, setReady] = useState(false);
   const [labels, setLabels] = useState([]);
   const [error, setError] = useState(null);
   const modelRef = useRef(null);
+  const isGraphModelRef = useRef(useGraphModel);
 
   useEffect(() => {
     let mounted = true;
@@ -49,13 +50,16 @@ export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/mod
         for (const path of modelPaths) {
           try {
             console.log(`[useTfjsClassifier] Intentando cargar modelo desde: ${path}`);
-            const model = await tf.loadLayersModel(`file://${path}` === `file://${path}` ? path : path);
+            const model = useGraphModel
+              ? await tf.loadGraphModel(path)
+              : await tf.loadLayersModel(path);
             modelRef.current = model;
             modelLoaded = true;
             if (mounted) {
               setReady(true);
               setError(null);
               console.log('[useTfjsClassifier] Modelo cargado exitosamente desde:', path);
+              console.log('[useTfjsClassifier] Tipo de modelo:', useGraphModel ? 'GraphModel' : 'LayersModel');
             }
             break;
           } catch (e) {
@@ -82,7 +86,18 @@ export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/mod
     // sequence24x126: Array(24) de Array(126)
     try {
       const input = tf.tensor(sequence24x126).expandDims(0); // [1,24,126]
-      const logits = modelRef.current.predict(input);
+      let logits;
+
+      if (isGraphModelRef.current) {
+        // GraphModel usa execute()
+        logits = modelRef.current.execute(input);
+        // execute puede devolver un tensor o un objeto/array, normalizar
+        if (Array.isArray(logits)) logits = logits[0];
+      } else {
+        // LayersModel usa predict()
+        logits = modelRef.current.predict(input);
+      }
+
       const probs = (await logits.softmax().data());
       input.dispose(); if (logits.dispose) logits.dispose();
       let bestI = 0; let bestP = 0;
@@ -90,6 +105,7 @@ export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/mod
       const label = labels[bestI] || `Clase ${bestI}`;
       return { label, confidence: bestP };
     } catch (e) {
+      console.error('[useTfjsClassifier] Error de inferencia:', e);
       return { label: 'Error de inferencia', confidence: 0 };
     }
   }, [ready, labels]);
