@@ -16,7 +16,8 @@
       "Bash(python convert_simple.py:*)",
       "Bash(python convert_direct.py:*)",
       "Bash(copy \"C:\\Users\\Sebastian_Medina\\Desktop\\SignBridge\\EntrenamientoMovimientoHibrido\\EntrenamientoMovimiento_v4\\model\\best_model.keras\" \"C:\\Users\\Sebastian_Medina\\Documents\\GitHub\\signbridge-app\\public\\model\\best_model.keras\" /Y)",
-      "Bash(npx tensorflowjs_converter:*)"
+      "Bash(npx tensorflowjs_converter:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []
