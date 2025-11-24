@@ -4,12 +4,13 @@ import '../utils/tfjs-compat';
 
 /**
  * useTfjsClassifier
- * Carga un modelo TFJS (layers) exportado desde Keras y clasifica secuencias de 24 frames x 126 features.
+ * Carga un modelo TFJS (GraphModel) optimizado para web con cuantización uint8.
  * - Espera input shape: [batch, 24, 126]
  * - Normalización: ya aplicada en el hook de MediaPipe
  * - Labels: se cargan desde /labels.json o prop.
+ * - Usa GraphModel por defecto (más rápido y optimizado)
  */
-export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/model/model.json', useGraphModel = false } = {}) {
+export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/model/model.json', useGraphModel = true } = {}) {
   const [ready, setReady] = useState(false);
   const [labels, setLabels] = useState([]);
   const [error, setError] = useState(null);
