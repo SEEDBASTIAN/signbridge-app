@@ -68,10 +68,11 @@ export function useTfjsClassifier({ labelsUrl = '/labels.json', modelUrl = '/mod
         }
 
         if (!modelLoaded && mounted) {
-          const errorMsg = 'No se pudo cargar el modelo. Verifica que los archivos estén en /public/model/';
+          const errorMsg = 'Modelo no encontrado. El SavedModel necesita ser convertido a formato TensorFlow.js. Consulta README para instrucciones.';
           setError(errorMsg);
           console.error('[useTfjsClassifier] Rutas intentadas:', modelPaths);
           console.error('[useTfjsClassifier] Error final:', errorMsg);
+          console.error('[useTfjsClassifier] NOTA: Ejecuta el script de conversión en el directorio de entrenamiento');
         }
       } catch (e) {
         console.error('[useTfjsClassifier] Error al cargar:', e);

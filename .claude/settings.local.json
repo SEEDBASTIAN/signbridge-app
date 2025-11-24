@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(python -c:*)",
+      "Bash(pip install:*)",
+      "Bash(python convert_to_tfjs.py:*)",
+      "Bash(xcopy:*)",
+      "Bash(npm install:*)",
+      "Bash(tensorflowjs_converter:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(python convert_keras_to_tfjs.py:*)",
+      "Bash(pip uninstall:*)",
+      "Bash(python convert_simple.py:*)",
+      "Bash(python convert_direct.py:*)",
+      "Bash(copy \"C:\\Users\\Sebastian_Medina\\Desktop\\SignBridge\\EntrenamientoMovimientoHibrido\\EntrenamientoMovimiento_v4\\model\\best_model.keras\" \"C:\\Users\\Sebastian_Medina\\Documents\\GitHub\\signbridge-app\\public\\model\\best_model.keras\" /Y)",
+      "Bash(npx tensorflowjs_converter:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
